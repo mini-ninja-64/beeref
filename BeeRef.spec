@@ -2,15 +2,9 @@
 
 import os
 from os.path import join
-import sys
+import platform
 
 block_cipher = None
-
-if sys.platform.startswith('win'):
-    icon = 'logo.ico'
-else:
-    icon = 'logo.icns'  # For OSX; param gets ignored on Linux
-
 
 a = Analysis(
     [join('beeref', '__main__.py')],
@@ -32,8 +26,16 @@ a = Analysis(
 pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
 
 from beeref import constants
-appname = f'{constants.APPNAME}-{constants.VERSION}'
 
+operating_system = platform.system()
+architecture = platform.processor()
+
+if operating_system.lower().startswith('win'):
+    icon = 'logo.ico'
+else:
+    icon = 'logo.icns'  # For OSX; param gets ignored on Linux
+
+executable_name = f'{constants.APPNAME}-{constants.VERSION}-{operating_system}-{architecture}'
 
 exe = EXE(
     pyz,
@@ -42,7 +44,7 @@ exe = EXE(
     a.zipfiles,
     a.datas,
     [],
-    name=appname,
+    name=executable_name,
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,

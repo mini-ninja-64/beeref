@@ -56,7 +56,6 @@ jobs:
         if: startsWith(github.ref, 'refs/heads/')
         uses: actions/upload-artifact@v3
         with:
-          name: build-${{ matrix.os }}
           path: dist/*
           retention-days: 1
 
@@ -69,5 +68,5 @@ jobs:
           omitNameDuringUpdate: true
 
           generateReleaseNotes: true
-          name: BeeRef-${{ matrix.os }}
+          name: "${{  github.ref_name }}"
           artifacts: dist/*
