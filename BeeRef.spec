@@ -35,7 +35,7 @@ if operating_system.startswith('Win'):
 else:
     icon = 'logo.icns'  # For OSX; param gets ignored on Linux
 
-executable_name = f'{constants.APPNAME}-{constants.VERSION}-{operating_system}-{architecture}'
+executable_name = f'{constants.APPNAME}'
 
 exe = EXE(
     pyz,
@@ -61,7 +61,7 @@ exe = EXE(
 if operating_system == 'Darwin':
     app = BUNDLE(
         exe,
-        name=f'{constants.APPNAME}.app',
+        name=f'{executable_name}.app',
         icon=join('beeref', 'assets', icon),
         bundle_identifier='org.beeref.app',
         version=f'{constants.VERSION}',
@@ -73,3 +73,4 @@ if operating_system == 'Darwin':
                 }
             ]
         })
+    

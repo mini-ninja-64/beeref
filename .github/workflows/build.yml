@@ -13,7 +13,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: ['ubuntu-22.04', 'macos-11', 'windows-latest']
+        os: [ 'ubuntu-22.04', 'macos-11', 'windows-latest' ]
+        # Currently this is a dummy variable to make the migration to
+        # multi-arch builds easier in the future
+        arch: [ 'x86_64' ]
 
     steps:
       - uses: actions/checkout@v3
@@ -52,11 +55,28 @@ jobs:
       - name: Run Pyinstaller
         run: pdm run pyinstaller BeeRef.spec
 
-      - name: Upload temporary artifact for branch builds
+      - name: Compress artifact
+        env:
+          ARTIFACT_PATH: dist/BeeRef-${{ github.ref_name }}-${{ runner.os }}-${{ matrix.arch }}.tar.gz
+        run: |
+          EXECUTABLE_PATH="dist/BeeRef"
+
+          if [ "$RUNNER_OS" == "Linux" ]; then
+            EXECUTABLE_PATH="$EXECUTABLE_PATH"
+          elif [ "$RUNNER_OS" == "Windows"]; then
+            EXECUTABLE_PATH="$EXECUTABLE_PATH.exe"
+          elif [ "$RUNNER_OS" == "macOS" ]; then
+            EXECUTABLE_PATH="$EXECUTABLE_PATH.app"
+          fi
+
+          echo "Packaging '$ARTIFACT_PATH' from '$EXECUTABLE_PATH'"
+          tar -czvf "$ARTIFACT_PATH" "$EXECUTABLE_PATH"
+
+      - name: Upload temporary artifacts for branch builds
         if: startsWith(github.ref, 'refs/heads/')
         uses: actions/upload-artifact@v3
         with:
-          path: dist/*
+          path: "${{ env.ARTIFACT_PATH }}"
           retention-days: 1
 
       - name: Upload release artifact
@@ -68,5 +88,5 @@ jobs:
           omitNameDuringUpdate: true
 
           generateReleaseNotes: true
-          name: "${{  github.ref_name }}"
-          artifacts: dist/*
+          name: "${{ github.ref_name }}"
+          artifacts: "${{ env.ARTIFACT_PATH }}"
