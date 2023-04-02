@@ -30,7 +30,7 @@ from beeref import constants
 operating_system = platform.system()
 architecture = platform.processor()
 
-if operating_system.lower().startswith('win'):
+if operating_system.startswith('Win'):
     icon = 'logo.ico'
 else:
     icon = 'logo.icns'  # For OSX; param gets ignored on Linux
@@ -58,7 +58,7 @@ exe = EXE(
     entitlements_file=None ,
     icon=join('beeref', 'assets', icon))
 
-if sys.platform == 'darwin':
+if operating_system == 'Darwin':
     app = BUNDLE(
         exe,
         name=f'{constants.APPNAME}.app',
