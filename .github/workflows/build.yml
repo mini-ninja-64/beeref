@@ -76,11 +76,13 @@ jobs:
           echo "Packaging '$ARTIFACT_PATH' from '$EXECUTABLE_PATH'"
           tar -czvf "$ARTIFACT_PATH" "$EXECUTABLE_PATH"
 
+          echo "ARTIFACT_PATH=$ARTIFACT_PATH" >> $GITHUB_ENV
+
       - name: Upload temporary artifacts for branch builds
         if: startsWith(github.ref, 'refs/heads/')
         uses: actions/upload-artifact@v3
         with:
-          path: "${{ env.ARTIFACT_PATH }}"
+          path: ${{ env.ARTIFACT_PATH }}
           retention-days: 1
 
       - name: Upload release artifact
