@@ -60,21 +60,21 @@ jobs:
         env:
           ARTIFACT_PATH: dist/BeeRef-${{ github.ref_name }}-${{ runner.os }}-${{ matrix.arch }}.tar.gz
         run: |
-          EXECUTABLE_PATH="dist/BeeRef"
+          APPLICATION_FILE="BeeRef"
 
           if [ "$RUNNER_OS" == "Linux" ]; then
-            EXECUTABLE_PATH="$EXECUTABLE_PATH"
+            APPLICATION_FILE="$APPLICATION_FILE"
           elif [ "$RUNNER_OS" == "macOS" ]; then
-            EXECUTABLE_PATH="$EXECUTABLE_PATH.app"
+            APPLICATION_FILE="$APPLICATION_FILE.app"
           elif [ "$RUNNER_OS" == "Windows" ]; then
-            EXECUTABLE_PATH="$EXECUTABLE_PATH.exe"
+            APPLICATION_FILE="$APPLICATION_FILE.exe"
           else
             echo "Unsupported OS: '$RUNNER_OS'"
             exit 1
           fi
 
-          echo "Packaging '$ARTIFACT_PATH' from '$EXECUTABLE_PATH'"
-          tar -czvf "$ARTIFACT_PATH" "$EXECUTABLE_PATH"
+          echo "Packaging '$APPLICATION_FILE' to '$ARTIFACT_PATH'"
+          tar --create --gzip --directory "dist" --file="$ARTIFACT_PATH" "$APPLICATION_FILE"
 
           echo "ARTIFACT_PATH=$ARTIFACT_PATH" >> $GITHUB_ENV
 
