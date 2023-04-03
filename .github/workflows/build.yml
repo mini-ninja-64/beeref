@@ -56,6 +56,7 @@ jobs:
         run: pdm run pyinstaller BeeRef.spec
 
       - name: Compress artifact
+        shell: bash
         env:
           ARTIFACT_PATH: dist/BeeRef-${{ github.ref_name }}-${{ runner.os }}-${{ matrix.arch }}.tar.gz
         run: |
@@ -63,10 +64,13 @@ jobs:
 
           if [ "$RUNNER_OS" == "Linux" ]; then
             EXECUTABLE_PATH="$EXECUTABLE_PATH"
-          elif [ "$RUNNER_OS" == "Windows"]; then
-            EXECUTABLE_PATH="$EXECUTABLE_PATH.exe"
           elif [ "$RUNNER_OS" == "macOS" ]; then
             EXECUTABLE_PATH="$EXECUTABLE_PATH.app"
+          elif [ "$RUNNER_OS" == "Windows" ]; then
+            EXECUTABLE_PATH="$EXECUTABLE_PATH.exe"
+          else
+            echo "Unsupported OS: '$RUNNER_OS'"
+            exit 1
           fi
 
           echo "Packaging '$ARTIFACT_PATH' from '$EXECUTABLE_PATH'"
