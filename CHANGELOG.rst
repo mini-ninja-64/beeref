@@ -1,3 +1,18 @@
+0.3.1 - 2023-04-03
+====================
+
+Changed
+-------
+
+* Migrate from using `pipenv`/`setuptools` to `pdm`
+* Update some dependencies
+
+Fixed
+-----
+
+* Fix GitHub build actions
+
+
 0.3.0 - 2023-03-13
 ====================
 
