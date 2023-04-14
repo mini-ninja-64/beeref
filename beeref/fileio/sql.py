@@ -186,7 +186,8 @@ class SQLiteIO:
         rows = self.fetchall(
             'SELECT items.id, type, x, y, z, scale, rotation, flip, '
             'items.data, sqlar.data '
-            'FROM items LEFT OUTER JOIN sqlar on sqlar.item_id = items.id')
+            'FROM sqlar LEFT OUTER JOIN items on sqlar.item_id = items.id '
+            'WHERE items.id IS NOT null')
         if self.worker:
             self.worker.begin_processing.emit(len(rows))
 
