@@ -50,6 +50,7 @@ class BeeRefMainWindow(QtWidgets.QMainWindow):
         super().__init__()
         app.setOrganizationName(constants.APPNAME)
         app.setApplicationName(constants.APPNAME)
+        app.setDesktopFileName(constants.DESKTOP_FILENAME)
         self.setWindowIcon(BeeAssets().logo)
         self.view = BeeGraphicsView(app, self)
         default_window_size = QtCore.QSize(500, 300)
